@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/jorimusic
+      - SPRING_DATASOURCE_USERNAME=jorimusic
+      - SPRING_DATASOURCE_PASSWORD=jorimusic
+
+  downloader:
+    build: ./downloader
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./music:/app/music
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    command: npm run web
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=jorimusic
+      - POSTGRES_USER=jorimusic
+      - POSTGRES_PASSWORD=jorimusic
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
