@@ -22,6 +22,7 @@
 /frontend/dummy_credentials.json
 /frontend/package-lock.json
 /frontend/yarn.lock
+/frontend/.watchmanconfig
 
 # Tauri
 /frontend/src-tauri/target/
