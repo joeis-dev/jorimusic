@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, Alert } from 'react-native';
+import { View, Text, Button, StyleSheet, TextInput, Alert, Dimensions } from 'react-native';
 import { login } from '../services/api';
 
 interface AuthScreenProps {
   navigation: any; // You might want to use a more specific type from @react-navigation/native
 }
+
+const { width } = Dimensions.get('window');
 
 const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -30,21 +32,32 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>JoriMusic</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button title="Login" onPress={handleLogin} />
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.icon}>👤</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+          autoCapitalize="none"
+        />
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.icon}>🔒</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <Button title="Login" onPress={handleLogin} />
+      </View>
       {/* Add more UI elements for signup, forgot password, etc. */}
     </View>
   );
@@ -63,15 +76,28 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 40,
   },
-  input: {
-    width: '100%',
-    height: 50,
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: width * 0.7, // 70% of screen width
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 8,
-    paddingHorizontal: 15,
     marginBottom: 20,
     backgroundColor: '#fff',
+    paddingHorizontal: 10,
+  },
+  icon: {
+    fontSize: 20,
+    marginRight: 10,
+  },
+  input: {
+    flex: 1, // Take remaining space
+    height: 50,
+  },
+  buttonContainer: {
+    width: width * 0.5, // 50% of screen width
+    marginTop: 10,
   },
 });
 

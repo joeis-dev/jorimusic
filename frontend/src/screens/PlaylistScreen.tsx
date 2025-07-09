@@ -1,41 +1,92 @@
-import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button } from 'react-native';
-
-interface Playlist {
-  id: string;
-  name: string;
-  songCount: number;
-}
-
-const dummyPlaylists: Playlist[] = [
-  { id: '1', name: 'My Favorites', songCount: 15 },
-  { id: '2', name: 'Workout Mix', songCount: 30 },
-  { id: '3', name: 'Chill Vibes', songCount: 22 },
-];
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button, ActivityIndicator, Alert } from 'react-native';
+import { getAllPlaylists } from '../services/api';
+import { Playlist } from '../types/models';
 
 const PlaylistScreen: React.FC = () => {
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPlaylists = async () => {
+      try {
+        const fetchedPlaylists = await getAllPlaylists();
+        setPlaylists(fetchedPlaylists);
+        setLoading(false);
+      } catch (err) {
+        console.error('Failed to fetch playlists:', err);
+        setError('Failed to load playlists. Please try again later.');
+        setLoading(false);
+        Alert.alert('Error', 'Failed to load playlists. Please check your backend connection.');
+      }
+    };
+
+    fetchPlaylists();
+  }, []);
+
   const renderPlaylistItem = ({ item }: { item: Playlist }) => (
     <TouchableOpacity style={styles.playlistItem}>
       <Text style={styles.playlistName}>{item.name}</Text>
-      <Text style={styles.songCount}>{item.songCount} songs</Text>
+      {/* Assuming songCount is not directly available from backend Playlist model, or needs to be calculated */}
+      <Text style={styles.songCount}>{item.songs ? item.songs.length : 0} songs</Text>
     </TouchableOpacity>
   );
 
   const handleCreatePlaylist = () => {
     // Implement logic to create a new playlist
     console.log('Create New Playlist button pressed');
-    alert('Create New Playlist functionality not yet implemented.');
+    Alert.alert('Feature Not Implemented', 'Creating new playlists is not yet implemented.');
   };
+
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Loading playlists...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.errorText}>{error}</Text>
+        <Button title="Retry" onPress={() => {
+          setLoading(true);
+          setError(null);
+          // Re-fetch data on retry
+          const fetchPlaylistsOnRetry = async () => {
+            try {
+              const fetchedPlaylists = await getAllPlaylists();
+              setPlaylists(fetchedPlaylists);
+              setLoading(false);
+            } catch (err) {
+              console.error('Failed to fetch playlists on retry:', err);
+              setError('Failed to load playlists. Please try again later.');
+              setLoading(false);
+              Alert.alert('Error', 'Failed to load playlists. Please check your backend connection.');
+            }
+          };
+          fetchPlaylistsOnRetry();
+        }} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Your Playlists</Text>
-      <FlatList
-        data={dummyPlaylists}
-        renderItem={renderPlaylistItem}
-        keyExtractor={(item) => item.id}
-        style={styles.playlistList}
-      />
+      {playlists.length > 0 ? (
+        <FlatList
+          data={playlists}
+          renderItem={renderPlaylistItem}
+          keyExtractor={(item) => item.id.toString()}
+          style={styles.playlistList}
+        />
+      ) : (
+        <Text style={styles.noPlaylistsText}>No playlists found. Create one!</Text>
+      )}
       <Button title="Create New Playlist" onPress={handleCreatePlaylist} />
     </View>
   );
@@ -77,6 +128,22 @@ const styles = StyleSheet.create({
   },
   songCount: {
     fontSize: 14,
+    color: 'gray',
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  noPlaylistsText: {
+    textAlign: 'center',
+    marginTop: 50,
+    fontSize: 16,
     color: 'gray',
   },
 });
