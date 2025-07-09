@@ -1,5 +1,7 @@
 package com.jorimusic.backend.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import com.jorimusic.backend.model.Song;
 import com.jorimusic.backend.service.SongService;
 import com.jorimusic.backend.service.DownloaderService;
