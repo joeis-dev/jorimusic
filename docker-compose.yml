@@ -11,13 +11,15 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/jorimusic
       - SPRING_DATASOURCE_USERNAME=jorimusic
       - SPRING_DATASOURCE_PASSWORD=jorimusic
+    volumes:
+      - /home/joe/JoriMusic_Library:/app/music
 
   downloader:
     build: ./downloader
     ports:
       - "5000:5000"
     volumes:
-      - ./music:/app/music
+      - /home/joe/JoriMusic_Library:/app/music
 
   frontend:
     build: ./frontend
