@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Alert, useWindowDimensions } from 'react-native';
 import { getAllPlaylists } from '../services/api';
 import { Playlist } from '../types/models';
 import { useTheme } from '../context/ThemeContext';
@@ -7,6 +7,7 @@ import ThemedButton from '../components/ThemedButton';
 
 const PlaylistScreen: React.FC = () => {
   const { theme } = useTheme();
+  const { width } = useWindowDimensions();
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -16,6 +17,7 @@ const PlaylistScreen: React.FC = () => {
       flex: 1,
       backgroundColor: theme.colors.background,
       padding: 20,
+      alignItems: 'center',
     },
     title: {
       fontSize: 28,
@@ -26,7 +28,7 @@ const PlaylistScreen: React.FC = () => {
     },
     playlistList: {
       flexGrow: 1,
-      width: '100%',
+      width: width > 768 ? 600 : '100%',
     },
     playlistItem: {
       backgroundColor: theme.colors.background,

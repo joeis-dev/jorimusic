@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Alert, useWindowDimensions } from 'react-native';
 import { getAllSongs, getAllPlaylists } from '../services/api';
 import { Song, Playlist } from '../types/models';
 import { useTheme } from '../context/ThemeContext';
@@ -11,6 +11,7 @@ interface HomeScreenProps {
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const { theme } = useTheme();
+  const { width } = useWindowDimensions();
   const [songs, setSongs] = useState<Song[]>([]);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
@@ -21,6 +22,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       flex: 1,
       backgroundColor: theme.colors.background,
       padding: 20,
+      alignItems: 'center',
     },
     welcomeText: {
       fontSize: 28,
@@ -31,6 +33,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     },
     section: {
       marginBottom: 30,
+      width: width > 768 ? 600 : '100%',
     },
     sectionTitle: {
       fontSize: 22,
@@ -46,6 +49,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     navigationButtons: {
       marginTop: 20,
       gap: 10,
+      flexDirection: width > 768 ? 'row' : 'column',
+      width: width > 768 ? 600 : '100%',
     },
     centered: {
       flex: 1,

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Switch } from 'react-native';
+import { View, Text, StyleSheet, Switch, useWindowDimensions } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 import ThemedButton from '../components/ThemedButton';
 
 const SettingsScreen: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
+  const { width } = useWindowDimensions();
   const [selectedLanguage, setSelectedLanguage] = useState('English');
 
   const handleLanguageChange = (lang: string) => {
@@ -18,6 +19,7 @@ const SettingsScreen: React.FC = () => {
       flex: 1,
       backgroundColor: theme.colors.background,
       padding: 20,
+      alignItems: 'center',
     },
     title: {
       fontSize: 28,
@@ -39,6 +41,7 @@ const SettingsScreen: React.FC = () => {
       shadowOpacity: 0.2,
       shadowRadius: 1.41,
       elevation: 2,
+      width: width > 768 ? 600 : '90%',
     },
     settingLabel: {
       fontSize: 18,
@@ -46,7 +49,7 @@ const SettingsScreen: React.FC = () => {
       color: theme.colors.primary,
     },
     languageOptions: {
-      flexDirection: 'row',
+      flexDirection: width > 768 ? 'row' : 'column',
       gap: 15,
     },
     languageText: {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity, ActivityIndicator, Alert, useWindowDimensions } from 'react-native';
 import { getAllSongs } from '../services/api';
 import { Song } from '../types/models';
 import { useTheme } from '../context/ThemeContext';
@@ -7,6 +7,7 @@ import ThemedButton from '../components/ThemedButton';
 
 const SearchScreen: React.FC = () => {
   const { theme } = useTheme();
+  const { width } = useWindowDimensions();
   const [searchText, setSearchText] = useState('');
   const [allSongs, setAllSongs] = useState<Song[]>([]);
   const [searchResults, setSearchResults] = useState<Song[]>([]);
@@ -18,6 +19,7 @@ const SearchScreen: React.FC = () => {
       flex: 1,
       backgroundColor: theme.colors.background,
       padding: 20,
+      alignItems: 'center',
     },
     searchInput: {
       height: 50,
@@ -28,10 +30,11 @@ const SearchScreen: React.FC = () => {
       marginBottom: 20,
       backgroundColor: theme.colors.background,
       color: theme.colors.primary,
+      width: width > 768 ? 600 : '90%',
     },
     resultsList: {
       flexGrow: 1,
-      width: '100%',
+      width: width > 768 ? 600 : '90%',
     },
     songItem: {
       backgroundColor: theme.colors.background,

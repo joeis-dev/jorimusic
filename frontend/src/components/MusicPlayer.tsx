@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, Alert, useWindowDimensions } from 'react-native';
 import TrackPlayer, { Capability, usePlaybackState, State } from 'react-native-track-player';
 import { getSongStreamUrl } from '../services/api';
 import { Song } from '../types/models';
 import { useTheme } from '../context/ThemeContext';
 import ThemedButton from './ThemedButton';
+import React, { useState, useEffect } from 'react';
 
 interface MusicPlayerProps {
   currentSong: Song | null;
@@ -11,6 +12,7 @@ interface MusicPlayerProps {
 
 const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentSong }) => {
   const { theme } = useTheme();
+  const { width } = useWindowDimensions();
   const playbackState = usePlaybackState();
   const [isPlayerReady, setIsPlayerReady] = useState(false);
 
@@ -21,6 +23,8 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentSong }) => {
       borderTopWidth: 1,
       borderColor: theme.colors.border,
       alignItems: 'center',
+      width: width > 768 ? 600 : '100%',
+      alignSelf: 'center',
     },
     title: {
       fontSize: 18,
