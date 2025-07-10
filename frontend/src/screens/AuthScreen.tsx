@@ -13,9 +13,9 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
   const [password, setPassword] = useState('');
 
   // Temporarily bypass login for development/testing
-  useEffect(() => {
-    navigation.replace('Home');
-  }, []);
+  // useEffect(() => {
+  //   navigation.replace('Home');
+  // }, []);
 
   const handleLogin = async () => {
     try {
