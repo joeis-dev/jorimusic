@@ -1,16 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import TrackPlayer, { Capability, usePlaybackState, State } from 'react-native-track-player';
 import { getSongStreamUrl } from '../services/api';
 import { Song } from '../types/models';
+import { useTheme } from '../context/ThemeContext';
+import ThemedButton from './ThemedButton';
 
 interface MusicPlayerProps {
   currentSong: Song | null;
 }
 
 const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentSong }) => {
+  const { theme } = useTheme();
   const playbackState = usePlaybackState();
   const [isPlayerReady, setIsPlayerReady] = useState(false);
+
+  const styles = StyleSheet.create({
+    container: {
+      padding: 20,
+      backgroundColor: theme.colors.background,
+      borderTopWidth: 1,
+      borderColor: theme.colors.border,
+      alignItems: 'center',
+    },
+    title: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginBottom: 5,
+      color: theme.colors.primary,
+    },
+    songInfo: {
+      fontSize: 16,
+      marginBottom: 10,
+      color: theme.colors.text,
+    },
+    noSongText: {
+      fontSize: 16,
+      color: theme.colors.text,
+    },
+  });
 
   useEffect(() => {
     const setupPlayer = async () => {
@@ -78,8 +105,8 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentSong }) => {
   if (!isPlayerReady) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="small" color="#0000ff" />
-        <Text>Loading player...</Text>
+        <ActivityIndicator size="small" color={theme.colors.secondary} />
+        <Text style={{ color: theme.colors.text }}>Loading player...</Text>
       </View>
     );
   }
@@ -90,7 +117,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentSong }) => {
         <View>
           <Text style={styles.title}>Now Playing:</Text>
           <Text style={styles.songInfo}>{currentSong.title} - {currentSong.artist}</Text>
-          <Button
+          <ThemedButton
             title={playbackState.state === State.Playing ? 'Pause' : 'Play'}
             onPress={togglePlayback}
           />
@@ -101,28 +128,5 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentSong }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: '#f8f8f8',
-    borderTopWidth: 1,
-    borderColor: '#e0e0e0',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  songInfo: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  noSongText: {
-    fontSize: 16,
-    color: 'gray',
-  },
-});
 
 export default MusicPlayer;

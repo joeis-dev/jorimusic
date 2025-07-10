@@ -1,17 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { getAllSongs, getAllPlaylists } from '../services/api';
 import { Song, Playlist } from '../types/models';
+import { useTheme } from '../context/ThemeContext';
+import ThemedButton from '../components/ThemedButton';
 
 interface HomeScreenProps {
   navigation: any;
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+  const { theme } = useTheme();
   const [songs, setSongs] = useState<Song[]>([]);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+      padding: 20,
+    },
+    welcomeText: {
+      fontSize: 28,
+      fontWeight: 'bold',
+      marginBottom: 30,
+      textAlign: 'center',
+      color: theme.colors.primary,
+    },
+    section: {
+      marginBottom: 30,
+    },
+    sectionTitle: {
+      fontSize: 22,
+      fontWeight: '600',
+      marginBottom: 15,
+      color: theme.colors.primary,
+    },
+    songItem: {
+      fontSize: 16,
+      marginBottom: 5,
+      color: theme.colors.text,
+    },
+    navigationButtons: {
+      marginTop: 20,
+      gap: 10,
+    },
+    centered: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.colors.background,
+    },
+    errorText: {
+      color: theme.colors.notification,
+      fontSize: 18,
+      marginBottom: 20,
+    },
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,8 +84,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Loading music data...</Text>
+        <ActivityIndicator size="large" color={theme.colors.secondary} />
+        <Text style={{ color: theme.colors.text }}>Loading music data...</Text>
       </View>
     );
   }
@@ -47,7 +94,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     return (
       <View style={styles.centered}>
         <Text style={styles.errorText}>{error}</Text>
-        <Button title="Retry" onPress={() => {
+        <ThemedButton title="Retry" onPress={() => {
           setLoading(true);
           setError(null);
           // Re-fetch data on retry
@@ -84,7 +131,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <Text key={song.id} style={styles.songItem}>- {song.title} by {song.artist}</Text>
           ))
         ) : (
-          <Text>No songs found.</Text>
+          <Text style={{ color: theme.colors.text }}>No songs found.</Text>
         )}
       </View>
 
@@ -95,57 +142,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <Text key={playlist.id} style={styles.songItem}>- {playlist.name}</Text>
           ))
         ) : (
-          <Text>No playlists found.</Text>
+          <Text style={{ color: theme.colors.text }}>No playlists found.</Text>
         )}
       </View>
 
       <View style={styles.navigationButtons}>
-        <Button title="Go to Playlists" onPress={() => navigation.navigate('Playlist')} />
-        <Button title="Go to Search" onPress={() => navigation.navigate('Search')} />
-        <Button title="Go to Settings" onPress={() => navigation.navigate('Settings')} />
+        <ThemedButton title="Go to Playlists" onPress={() => navigation.navigate('Playlist')} />
+        <ThemedButton title="Go to Search" onPress={() => navigation.navigate('Search')} />
+        <ThemedButton title="Go to Settings" onPress={() => navigation.navigate('Settings')} />
       </View>
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f0f0f0',
-    padding: 20,
-  },
-  welcomeText: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 30,
-    textAlign: 'center',
-  },
-  section: {
-    marginBottom: 30,
-  },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: '600',
-    marginBottom: 15,
-  },
-  songItem: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  navigationButtons: {
-    marginTop: 20,
-    gap: 10,
-  },
-  centered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 18,
-    marginBottom: 20,
-  },
-});
 
 export default HomeScreen;
