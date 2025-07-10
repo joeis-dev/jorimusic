@@ -32,6 +32,7 @@ export default defineConfig({
       'react-native-share': '/app/__mocks__/react-native-share/index.js',
       'react-native-fs': '/app/__mocks__/react-native-fs/index.js',
       'shaka-player': '/app/__mocks__/shaka-player/index.js',
+      '@react-native-async-storage/async-storage': '/app/__mocks__/@react-native-async-storage/async-storage/index.js',
     },
   },
   optimizeDeps: {

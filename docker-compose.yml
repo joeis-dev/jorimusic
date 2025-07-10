@@ -9,15 +9,24 @@ services:
       - db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/jorimusic
-      - SPRING_DATASOURCE_USERNAME=jorimusic
-      - SPRING_DATASOURCE_PASSWORD=jorimusic
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - FLYWAY_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
+      - FLYWAY_USER=${POSTGRES_USER}
+      - FLYWAY_PASSWORD=${POSTGRES_PASSWORD}
+      - FLYWAY_CLEAN_DISABLED=false
+      - FLYWAY_LOCATIONS=filesystem:/tmp/migrations
+      - FLYWAY_BASELINE_ON_MIGRATE=true
+    volumes:
+      - /home/joe/JoriMusic_Library:/app/music
 
   downloader:
     build: ./downloader
     ports:
       - "5000:5000"
     volumes:
-      - ./music:/app/music
+      - /home/joe/JoriMusic_Library:/app/music
 
   frontend:
     build: ./frontend
@@ -30,9 +39,9 @@ services:
   db:
     image: postgres:13
     environment:
-      - POSTGRES_DB=jorimusic
-      - POSTGRES_USER=jorimusic
-      - POSTGRES_PASSWORD=jorimusic
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

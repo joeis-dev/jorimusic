@@ -1,40 +1,102 @@
-import React from 'react';
-import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Button, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import { getAllSongs, getAllPlaylists } from '../services/api';
+import { Song, Playlist } from '../types/models';
 
 interface HomeScreenProps {
   navigation: any;
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  // Dummy data for demonstration
-  const recentlyPlayed = [
-    { id: '1', title: 'Song A', artist: 'Artist X' },
-    { id: '2', title: 'Song B', artist: 'Artist Y' },
-    { id: '3', title: 'Song C', artist: 'Artist Z' },
-  ];
+  const [songs, setSongs] = useState<Song[]>([]);
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const recommendedSongs = [
-    { id: '4', title: 'Song D', artist: 'Artist A' },
-    { id: '5', title: 'Song E', artist: 'Artist B' },
-    { id: '6', title: 'Song F', artist: 'Artist C' },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fetchedSongs = await getAllSongs();
+        setSongs(fetchedSongs);
+
+        const fetchedPlaylists = await getAllPlaylists();
+        setPlaylists(fetchedPlaylists);
+
+        setLoading(false);
+      } catch (err) {
+        console.error('Failed to fetch data:', err);
+        setError('Failed to load data. Please try again later.');
+        setLoading(false);
+        Alert.alert('Error', 'Failed to load data. Please check your backend connection.');
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Loading music data...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.errorText}>{error}</Text>
+        <Button title="Retry" onPress={() => {
+          setLoading(true);
+          setError(null);
+          // Re-fetch data on retry
+          const fetchDataOnRetry = async () => {
+            try {
+              const fetchedSongs = await getAllSongs();
+              setSongs(fetchedSongs);
+
+              const fetchedPlaylists = await getAllPlaylists();
+              setPlaylists(fetchedPlaylists);
+
+              setLoading(false);
+            } catch (err) {
+              console.error('Failed to fetch data on retry:', err);
+              setError('Failed to load data. Please try again later.');
+              setLoading(false);
+              Alert.alert('Error', 'Failed to load data. Please check your backend connection.');
+            }
+          };
+          fetchDataOnRetry();
+        }} />
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.welcomeText}>Welcome to JoriMusic!</Text>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Recently Played</Text>
-        {recentlyPlayed.map((song) => (
-          <Text key={song.id} style={styles.songItem}>- {song.title} by {song.artist}</Text>
-        ))}
+        <Text style={styles.sectionTitle}>All Songs</Text>
+        {songs.length > 0 ? (
+          songs.map((song) => (
+            <Text key={song.id} style={styles.songItem}>- {song.title} by {song.artist}</Text>
+          ))
+        ) : (
+          <Text>No songs found.</Text>
+        )}
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Recommended for You</Text>
-        {recommendedSongs.map((song) => (
-          <Text key={song.id} style={styles.songItem}>- {song.title} by {song.artist}</Text>
-        ))}
+        <Text style={styles.sectionTitle}>All Playlists</Text>
+        {playlists.length > 0 ? (
+          playlists.map((playlist) => (
+            <Text key={playlist.id} style={styles.songItem}>- {playlist.name}</Text>
+          ))
+        ) : (
+          <Text>No playlists found.</Text>
+        )}
       </View>
 
       <View style={styles.navigationButtons}>
@@ -73,6 +135,16 @@ const styles = StyleSheet.create({
   navigationButtons: {
     marginTop: 20,
     gap: 10,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 18,
+    marginBottom: 20,
   },
 });
 

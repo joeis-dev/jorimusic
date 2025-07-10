@@ -9,7 +9,6 @@ import com.jorimusic.backend.payload.response.JwtResponse;
 import com.jorimusic.backend.payload.response.MessageResponse;
 import com.jorimusic.backend.repository.RoleRepository;
 import com.jorimusic.backend.repository.UserRepository;
-import com.jorimusic.backend.security.JwtTokenProvider;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +17,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.jorimusic.backend.service.UserDetailsImpl;
-
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,14 +36,15 @@ public class AuthController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtTokenProvider jwtTokenProvider) {
+    private final Key key = Keys.hmacShaKeyFor("hqLaNlz07yMVz8+b1hvoOTOPjgpt/6JckOTq842jA5dwal0b9EdHohiYV7Slh03IiNFv7il6gbSf8croyIljZg==".getBytes());
+    private final long validityInMilliseconds = 86400000L;
+
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.encoder = encoder;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @PostMapping("/signin")
@@ -50,7 +54,20 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtTokenProvider.createToken(authentication);
+
+        String authorities = authentication.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.joining(","));
+
+        long now = (new Date()).getTime();
+        Date validity = new Date(now + this.validityInMilliseconds);
+
+        String jwt = Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim("auth", authorities)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(validity)
+                .compact();
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()

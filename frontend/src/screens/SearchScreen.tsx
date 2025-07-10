@@ -1,33 +1,36 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity } from 'react-native';
-
-interface Song {
-  id: string;
-  title: string;
-  artist: string;
-}
-
-const dummySongs: Song[] = [
-  { id: '1', title: 'Bohemian Rhapsody', artist: 'Queen' },
-  { id: '2', title: 'Stairway to Heaven', artist: 'Led Zeppelin' },
-  { id: '3', title: 'Hotel California', artist: 'Eagles' },
-  { id: '4', title: 'Smells Like Teen Spirit', artist: 'Nirvana' },
-  { id: '5', title: 'Billie Jean', artist: 'Michael Jackson' },
-  { id: '6', title: 'Like a Rolling Stone', artist: 'Bob Dylan' },
-  { id: '7', title: 'One', artist: 'U2' },
-  { id: '8', title: 'Imagine', artist: 'John Lennon' },
-  { id: '9', title: 'Hey Jude', artist: 'The Beatles' },
-  { id: '10', title: "Sweet Child o' Mine", artist: "Guns N' Roses" },
-];
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { getAllSongs } from '../services/api';
+import { Song } from '../types/models';
 
 const SearchScreen: React.FC = () => {
   const [searchText, setSearchText] = useState('');
+  const [allSongs, setAllSongs] = useState<Song[]>([]);
   const [searchResults, setSearchResults] = useState<Song[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAllSongs = async () => {
+      try {
+        const fetchedSongs = await getAllSongs();
+        setAllSongs(fetchedSongs);
+        setLoading(false);
+      } catch (err) {
+        console.error('Failed to fetch all songs for search:', err);
+        setError('Failed to load songs for search. Please try again later.');
+        setLoading(false);
+        Alert.alert('Error', 'Failed to load songs for search. Please check your backend connection.');
+      }
+    };
+
+    fetchAllSongs();
+  }, []);
 
   const handleSearch = (text: string) => {
     setSearchText(text);
     if (text.length > 0) {
-      const filteredResults = dummySongs.filter(
+      const filteredResults = allSongs.filter(
         (song) =>
           song.title.toLowerCase().includes(text.toLowerCase()) ||
           song.artist.toLowerCase().includes(text.toLowerCase())
@@ -45,6 +48,41 @@ const SearchScreen: React.FC = () => {
     </TouchableOpacity>
   );
 
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Loading songs for search...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.errorText}>{error}</Text>
+        <Button title="Retry" onPress={() => {
+          setLoading(true);
+          setError(null);
+          // Re-fetch data on retry
+          const fetchAllSongsOnRetry = async () => {
+            try {
+              const fetchedSongs = await getAllSongs();
+              setAllSongs(fetchedSongs);
+              setLoading(false);
+            } catch (err) {
+              console.error('Failed to fetch all songs on retry:', err);
+              setError('Failed to load songs for search. Please try again later.');
+              setLoading(false);
+              Alert.alert('Error', 'Failed to load songs for search. Please check your backend connection.');
+            }
+          };
+          fetchAllSongsOnRetry();
+        }} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -56,7 +94,7 @@ const SearchScreen: React.FC = () => {
       <FlatList
         data={searchResults}
         renderItem={renderSongItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         style={styles.resultsList}
         ListEmptyComponent={
           searchText.length > 0 ? (
@@ -113,6 +151,16 @@ const styles = StyleSheet.create({
     marginTop: 50,
     fontSize: 16,
     color: 'gray',
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 18,
+    marginBottom: 20,
   },
 });
 
