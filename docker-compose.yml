@@ -11,6 +11,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/jorimusic
       - SPRING_DATASOURCE_USERNAME=jorimusic
       - SPRING_DATASOURCE_PASSWORD=jorimusic
+      - JWT_SECRET=hqLaNlz07yMVz8+b1hvoOTOPjgpt/6JckOTq842jA5dwal0b9EdHohiYV7Slh03IiNFv7il6gbSf8croyIljZg==
     volumes:
       - /home/joe/JoriMusic_Library:/app/music
 
