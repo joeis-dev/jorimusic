@@ -22,4 +22,4 @@ RUN jar xf app.jar BOOT-INF/classes/db/migration/V1__initial_schema.sql &&     m
 
 WORKDIR /app
 
-ENTRYPOINT ["/bin/bash", "-c", "flyway -url=jdbc:postgresql://db:5432/jorimusic -user=jorimusic -password=jorimusic -cleanDisabled=false clean && flyway -url=jdbc:postgresql://db:5432/jorimusic -user=jorimusic -password=jorimusic -locations=filesystem:/tmp/migrations -baselineOnMigrate=true migrate && java -jar app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

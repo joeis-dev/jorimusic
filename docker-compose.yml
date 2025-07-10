@@ -12,6 +12,12 @@ services:
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
+      - FLYWAY_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
+      - FLYWAY_USER=${POSTGRES_USER}
+      - FLYWAY_PASSWORD=${POSTGRES_PASSWORD}
+      - FLYWAY_CLEAN_DISABLED=false
+      - FLYWAY_LOCATIONS=filesystem:/tmp/migrations
+      - FLYWAY_BASELINE_ON_MIGRATE=true
     volumes:
       - /home/joe/JoriMusic_Library:/app/music
 
