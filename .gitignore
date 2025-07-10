@@ -2,6 +2,9 @@
 /backend/target/
 /backend/.idea/
 /backend/.gradle/
+/backend/.classpath
+/backend/.project
+/backend/.settings/
 
 # Python
 /downloader/__pycache__/
@@ -23,6 +26,11 @@
 /frontend/package-lock.json
 /frontend/yarn.lock
 /frontend/.watchmanconfig
+/frontend/android/.gradle/
+/frontend/android/.project
+/frontend/android/.settings/
+/frontend/ios/.project
+/frontend/ios/.settings/
 
 # Tauri
 /frontend/src-tauri/target/

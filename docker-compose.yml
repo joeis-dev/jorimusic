@@ -9,9 +9,9 @@ services:
       - db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/jorimusic
-      - SPRING_DATASOURCE_USERNAME=jorimusic
-      - SPRING_DATASOURCE_PASSWORD=jorimusic
-      - JWT_SECRET=hqLaNlz07yMVz8+b1hvoOTOPjgpt/6JckOTq842jA5dwal0b9EdHohiYV7Slh03IiNFv7il6gbSf8croyIljZg==
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
     volumes:
       - /home/joe/JoriMusic_Library:/app/music
 
@@ -33,9 +33,9 @@ services:
   db:
     image: postgres:13
     environment:
-      - POSTGRES_DB=jorimusic
-      - POSTGRES_USER=jorimusic
-      - POSTGRES_PASSWORD=jorimusic
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
