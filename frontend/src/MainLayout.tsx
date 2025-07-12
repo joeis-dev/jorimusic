@@ -40,27 +40,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      {Platform.OS === 'web' ? (
-        <PanelGroup direction="horizontal">
-          <Panel defaultSize={10} minSize={5}>
-            <Sidebar navigation={navigation} route={route} />
-          </Panel>
-          <PanelResizeHandle style={styles.resizeHandle} />
-          <Panel>
-            <SearchProvider>
-              <View style={styles.content}>
-                <TopBar />
-                <View style={styles.mainContent}>
-                  <MainAppNavigator />
-                </View>
-                <MusicPlayer currentSong={currentSong} />
-              </View>
-            </SearchProvider>
-          </Panel>
-        </PanelGroup>
-      ) : (
-        <>
+      <PanelGroup direction="horizontal">
+        <Panel defaultSize={10} minSize={5}>
           <Sidebar navigation={navigation} route={route} />
+        </Panel>
+        <PanelResizeHandle style={styles.resizeHandle} />
+        <Panel>
           <SearchProvider>
             <View style={styles.content}>
               <TopBar />
@@ -70,8 +55,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ navigation, route }) => {
               <MusicPlayer currentSong={currentSong} />
             </View>
           </SearchProvider>
-        </>
-      )}
+        </Panel>
+      </PanelGroup>
     </View>
   );
 };
