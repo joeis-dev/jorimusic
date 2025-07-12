@@ -27,7 +27,6 @@ const Sidebar: React.FC<SidebarProps> = ({ navigation, route }) => {
 
   const styles = StyleSheet.create({
     container: {
-      width: 250, // Fixed width for the sidebar
       backgroundColor: theme.colors.background,
       paddingVertical: 20,
       borderRightWidth: 1,
