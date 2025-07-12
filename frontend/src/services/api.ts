@@ -62,14 +62,4 @@ export const getSongStreamUrl = (filePath: string): string => {
   return `${MUSIC_STREAM_BASE_URL}/${filePath}`;
 };
 
-export const downloadSong = async (songName: string) => {
-  try {
-    const response = await axios.post('http://localhost:5000/download', { song_name: songName });
-    return response.data;
-  } catch (error) {
-    console.error('Error downloading song:', error);
-    throw error;
-  }
-};
-
 export default api;

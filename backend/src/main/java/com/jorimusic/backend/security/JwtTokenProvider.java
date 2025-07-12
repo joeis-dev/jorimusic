@@ -1,29 +1,25 @@
 package com.jorimusic.backend.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import org.springframework.stereotype.Component;
 import java.util.stream.Collectors;
 
 @Component
-
 public class JwtTokenProvider {
 
     private final Logger log = LoggerFactory.getLogger(JwtTokenProvider.class);
@@ -32,13 +28,15 @@ public class JwtTokenProvider {
 
     private Key key;
 
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Value("${jwt.expiration}")
     private long validityInMilliseconds;
 
-    public JwtTokenProvider(Environment env) {
-        String secret = env.getProperty("jwt.secret");
-        this.validityInMilliseconds = Long.parseLong(env.getProperty("jwt.expiration"));
+    @PostConstruct
+    public void init() {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
-        log.trace("JWT Secret Key (from constructor): {}", secret);
     }
 
     public String createToken(Authentication authentication) {
@@ -52,7 +50,7 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
-                .signWith(key)
+                .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
     }

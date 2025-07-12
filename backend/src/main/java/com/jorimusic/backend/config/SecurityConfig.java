@@ -73,7 +73,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .apply(new JwtConfigurer());
+                .apply(new JwtConfigurer(tokenProvider));
 
         return http.build();
     }
