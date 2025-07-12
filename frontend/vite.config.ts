@@ -30,7 +30,7 @@ export default defineConfig({
     alias: {
       'react-native-share': './__mocks__/react-native-share/index.js',
       'react-native-fs': './__mocks__/react-native-fs/index.js',
-      'shaka-player': './__mocks__/shaka-player/index.js',
+      
       
     },
   },

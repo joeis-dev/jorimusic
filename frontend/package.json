@@ -23,6 +23,7 @@
     "i18next": "^25.3.1",
     "react": "19.1.0",
     "react-i18next": "^15.6.0",
+    "react-icons": "^5.5.0",
     "react-native": "0.80.1",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.27.1",
@@ -31,6 +32,7 @@
     "react-native-screens": "^4.11.1",
     "react-native-share": "^12.1.0",
     "react-native-track-player": "^4.1.1",
+    "react-native-vector-icons": "^10.2.0",
     "react-native-web": "^0.20.0",
     "react-resizable-panels": "^3.0.3"
   },

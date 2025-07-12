@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
-import { MdAccountCircle, MdHome, MdSearch, MdRadio, MdPlaylistPlay, MdAlbum, MdMusicNote, MdVideoLibrary, MdPeople, MdAddCircle, MdSettings } from 'react-icons/md';
+import { MdAccountCircle, MdHome, MdSearch, MdRadio, MdPlaylistPlay, MdAlbum, MdMusicNote, MdVideoLibrary, MdPeople, MdAddCircle, MdSettings, MdOutlineQueueMusic } from 'react-icons/md';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -10,6 +10,7 @@ type RootStackParamList = {
   Search: undefined;
   Playlist: undefined;
   Settings: undefined;
+  MusicPlayerExpanded: undefined;
 };
 
 type SidebarNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
@@ -26,7 +27,7 @@ const Sidebar: React.FC<SidebarProps> = ({ navigation, route }) => {
 
   const styles = StyleSheet.create({
     container: {
-      width: 250,
+      width: 250, // Fixed width for the sidebar
       backgroundColor: theme.colors.background,
       paddingVertical: 20,
       borderRightWidth: 1,
@@ -145,6 +146,14 @@ const Sidebar: React.FC<SidebarProps> = ({ navigation, route }) => {
       >
         <MdSearch style={{ ...styles.navIcon, ...(currentRouteName === 'Search' && styles.activeNavText) }} />
         <Text style={{ ...styles.navText, ...(currentRouteName === 'Search' && styles.activeNavText) }}>Search</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={{ ...styles.navItem, ...(currentRouteName === 'MusicPlayerExpanded' && styles.activeNavItem) }}
+        onPress={() => navigateTo('MusicPlayerExpanded')}
+      >
+        <MdOutlineQueueMusic style={{ ...styles.navIcon, ...(currentRouteName === 'MusicPlayerExpanded' && styles.activeNavText) }} />
+        <Text style={{ ...styles.navText, ...(currentRouteName === 'MusicPlayerExpanded' && styles.activeNavText) }}>Now Playing</Text>
       </TouchableOpacity>
 
       <Text style={styles.sectionTitle}>MY COLLECTION</Text>

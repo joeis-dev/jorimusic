@@ -5,7 +5,6 @@ import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
 import MusicPlayer from './components/MusicPlayer';
 import { useTheme } from './context/ThemeContext';
-import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
 
 import { SearchProvider } from './context/SearchContext';
 
@@ -21,17 +20,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({ navigation, route }) => {
     container: {
       flex: 1,
       backgroundColor: theme.colors.background,
+      flexDirection: 'row', // Arrange children horizontally
     },
     content: {
-      // flex: 1, // Managed by Panel
+      flex: 1, // Take remaining space
     },
     mainContent: {
       flex: 1,
-    },
-    resizeHandle: {
-      width: 5,
-      backgroundColor: theme.colors.border,
-      cursor: 'ew-resize',
     },
   });
 
@@ -40,23 +35,16 @@ const MainLayout: React.FC<MainLayoutProps> = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <PanelGroup direction="horizontal">
-        <Panel defaultSize={10} minSize={5}>
-          <Sidebar navigation={navigation} route={route} />
-        </Panel>
-        <PanelResizeHandle style={styles.resizeHandle} />
-        <Panel>
-          <SearchProvider>
-            <View style={styles.content}>
-              <TopBar />
-              <View style={styles.mainContent}>
-                <MainAppNavigator />
-              </View>
-              <MusicPlayer currentSong={currentSong} />
-            </View>
-          </SearchProvider>
-        </Panel>
-      </PanelGroup>
+      <Sidebar navigation={navigation} route={route} />
+      <SearchProvider>
+        <View style={styles.content}>
+          <TopBar />
+          <View style={styles.mainContent}>
+            <MainAppNavigator />
+          </View>
+          <MusicPlayer currentSong={currentSong} />
+        </View>
+      </SearchProvider>
     </View>
   );
 };
