@@ -4,6 +4,14 @@ import os
 
 app = Flask(__name__)
 
+@app.route('/health')
+def health_check():
+    return jsonify({'status': 'UP'}), 200
+
+@app.route('/readiness')
+def health_check():
+    return jsonify({'status': 'UP'}), 200
+
 @app.route('/download', methods=['POST'])
 def download_song():
     data = request.get_json()

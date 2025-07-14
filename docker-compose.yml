@@ -22,6 +22,12 @@ services:
       - downloader.service.url=http://downloader:5000
     volumes:
       - /home/joe/JoriMusic_Library:/app/music
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health/liveness"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   downloader:
     build: ./downloader
@@ -29,6 +35,11 @@ services:
       - "5000:5000"
     volumes:
       - /home/joe/JoriMusic_Library:/app/music
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   frontend:
     build: ./frontend
@@ -46,6 +57,11 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
