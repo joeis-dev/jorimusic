@@ -51,7 +51,7 @@ interface AuthScreenProps {
       width: width > 768 ? 200 : '50%', // Max width 200px on large screens, 50% on small
       marginTop: 10,
     },
-  });
+    });
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
