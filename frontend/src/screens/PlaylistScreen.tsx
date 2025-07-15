@@ -1,12 +1,76 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Alert, useWindowDimensions } from 'react-native';
 import { getAllPlaylists } from '../services/api';
 import { Playlist } from '../types/models';
+import { useTheme } from '../context/ThemeContext';
+import ThemedButton from '../components/ThemedButton';
 
 const PlaylistScreen: React.FC = () => {
+  const { theme } = useTheme();
+  const { width } = useWindowDimensions();
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+      padding: 20,
+      alignItems: 'center',
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: 'bold',
+      marginBottom: 20,
+      textAlign: 'center',
+      color: theme.colors.primary,
+    },
+    playlistList: {
+      flexGrow: 1,
+      width: width > 768 ? 600 : '100%',
+    },
+    playlistItem: {
+      backgroundColor: theme.colors.background,
+      padding: 15,
+      borderRadius: 8,
+      marginBottom: 10,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      shadowColor: theme.colors.primary,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.2,
+      shadowRadius: 1.41,
+      elevation: 2,
+    },
+    playlistName: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: theme.colors.primary,
+    },
+    songCount: {
+      fontSize: 14,
+      color: theme.colors.primary,
+    },
+    centered: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.colors.background,
+    },
+    errorText: {
+      color: theme.colors.notification,
+      fontSize: 18,
+      marginBottom: 20,
+    },
+    noPlaylistsText: {
+      textAlign: 'center',
+      marginTop: 50,
+      fontSize: 16,
+      color: theme.colors.text,
+    },
+  });
 
   useEffect(() => {
     const fetchPlaylists = async () => {
@@ -26,7 +90,7 @@ const PlaylistScreen: React.FC = () => {
   }, []);
 
   const renderPlaylistItem = ({ item }: { item: Playlist }) => (
-    <TouchableOpacity style={styles.playlistItem}>
+    <TouchableOpacity style={styles.playlistItem} activeOpacity={0.7}>
       <Text style={styles.playlistName}>{item.name}</Text>
       {/* Assuming songCount is not directly available from backend Playlist model, or needs to be calculated */}
       <Text style={styles.songCount}>{item.songs ? item.songs.length : 0} songs</Text>
@@ -42,8 +106,8 @@ const PlaylistScreen: React.FC = () => {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Loading playlists...</Text>
+        <ActivityIndicator size="large" color={theme.colors.secondary} />
+        <Text style={{ color: theme.colors.text }}>Loading playlists...</Text>
       </View>
     );
   }
@@ -52,7 +116,7 @@ const PlaylistScreen: React.FC = () => {
     return (
       <View style={styles.centered}>
         <Text style={styles.errorText}>{error}</Text>
-        <Button title="Retry" onPress={() => {
+        <ThemedButton title="Retry" onPress={() => {
           setLoading(true);
           setError(null);
           // Re-fetch data on retry
@@ -87,65 +151,9 @@ const PlaylistScreen: React.FC = () => {
       ) : (
         <Text style={styles.noPlaylistsText}>No playlists found. Create one!</Text>
       )}
-      <Button title="Create New Playlist" onPress={handleCreatePlaylist} />
+      <ThemedButton title="Create New Playlist" onPress={handleCreatePlaylist} />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f0f0f0',
-    padding: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  playlistList: {
-    flexGrow: 1,
-    width: '100%',
-  },
-  playlistItem: {
-    backgroundColor: '#fff',
-    padding: 15,
-    borderRadius: 8,
-    marginBottom: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-  },
-  playlistName: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  songCount: {
-    fontSize: 14,
-    color: 'gray',
-  },
-  centered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 18,
-    marginBottom: 20,
-  },
-  noPlaylistsText: {
-    textAlign: 'center',
-    marginTop: 50,
-    fontSize: 16,
-    color: 'gray',
-  },
-});
 
 export default PlaylistScreen;

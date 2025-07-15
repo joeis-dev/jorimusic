@@ -1,12 +1,11 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import vitePluginFlow from 'vite-plugin-flow';
 import reactNativeWeb from 'vite-plugin-react-native-web';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), tsconfigPaths(), vitePluginFlow(), reactNativeWeb()],
+  plugins: [react(), tsconfigPaths(), reactNativeWeb()],
   define: {
     // Define global variables expected by some React Native packages
     global: 'window',
@@ -29,10 +28,10 @@ export default defineConfig({
       '.mjs',
     ],
     alias: {
-      'react-native-share': '/app/__mocks__/react-native-share/index.js',
-      'react-native-fs': '/app/__mocks__/react-native-fs/index.js',
-      'shaka-player': '/app/__mocks__/shaka-player/index.js',
-      '@react-native-async-storage/async-storage': '/app/__mocks__/@react-native-async-storage/async-storage/index.js',
+      'react-native-share': './__mocks__/react-native-share/index.js',
+      'react-native-fs': './__mocks__/react-native-fs/index.js',
+      
+      
     },
   },
   optimizeDeps: {
@@ -52,8 +51,24 @@ export default defineConfig({
       ],
       loader: {
         '.js': 'jsx',
+        '.tsx': 'tsx',
       },
       jsx: 'automatic',
+    },
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/[name].js',
+      },
+    },
+  },
+  server: {
+    mimeTypes: {
+      'application/javascript': ['.tsx', '.jsx'],
+    },
+    fs: {
+      strict: false,
     },
   },
 });

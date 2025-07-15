@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.jorimusic.backend.service.UserDetailsImpl;
@@ -37,14 +38,17 @@ public class AuthController {
     private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
 
-    private final Key key = Keys.hmacShaKeyFor("hqLaNlz07yMVz8+b1hvoOTOPjgpt/6JckOTq842jA5dwal0b9EdHohiYV7Slh03IiNFv7il6gbSf8croyIljZg==".getBytes());
+    @Value("${JWT_SECRET_KEY}")
+    private String jwtSecretKey;
+    private final Key key;
     private final long validityInMilliseconds = 86400000L;
 
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder) {
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, @Value("${JWT_SECRET_KEY}") String jwtSecretKey) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.encoder = encoder;
+        this.key = Keys.hmacShaKeyFor(jwtSecretKey.getBytes());
     }
 
     @PostMapping("/signin")

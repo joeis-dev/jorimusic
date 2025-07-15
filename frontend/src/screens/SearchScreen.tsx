@@ -1,14 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, Alert, useWindowDimensions } from 'react-native';
 import { getAllSongs } from '../services/api';
 import { Song } from '../types/models';
+import { useTheme } from '../context/ThemeContext';
+import ThemedButton from '../components/ThemedButton';
+import TrackListItem from '../components/TrackListItem';
+import { useSearch } from '../context/SearchContext';
 
 const SearchScreen: React.FC = () => {
-  const [searchText, setSearchText] = useState('');
+  const { theme } = useTheme();
+  const { width } = useWindowDimensions();
+  const { searchQuery } = useSearch();
   const [allSongs, setAllSongs] = useState<Song[]>([]);
   const [searchResults, setSearchResults] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+      padding: 20,
+      alignItems: 'center',
+    },
+    resultsList: {
+      flexGrow: 1,
+      width: width > 768 ? 600 : '90%',
+    },
+    noResultsText: {
+      textAlign: 'center',
+      marginTop: 50,
+      fontSize: 16,
+      color: theme.colors.text,
+    },
+    centered: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.colors.background,
+    },
+    errorText: {
+      color: theme.colors.notification,
+      fontSize: 18,
+      marginBottom: 20,
+    },
+    trackListHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 10,
+      paddingHorizontal: 5,
+    },
+    trackListHeaderItem: {
+      fontSize: 14,
+      fontWeight: 'bold',
+      color: theme.colors.text,
+    },
+  });
 
   useEffect(() => {
     const fetchAllSongs = async () => {
@@ -27,32 +75,29 @@ const SearchScreen: React.FC = () => {
     fetchAllSongs();
   }, []);
 
-  const handleSearch = (text: string) => {
-    setSearchText(text);
-    if (text.length > 0) {
+  useEffect(() => {
+    if (searchQuery.length > 0) {
       const filteredResults = allSongs.filter(
         (song) =>
-          song.title.toLowerCase().includes(text.toLowerCase()) ||
-          song.artist.toLowerCase().includes(text.toLowerCase())
+          song.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          song.artist.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setSearchResults(filteredResults);
     } else {
       setSearchResults([]);
     }
-  };
+  }, [searchQuery, allSongs]);
 
-  const renderSongItem = ({ item }: { item: Song }) => (
-    <TouchableOpacity style={styles.songItem}>
-      <Text style={styles.songTitle}>{item.title}</Text>
-      <Text style={styles.songArtist}>{item.artist}</Text>
-    </TouchableOpacity>
-  );
+  const handleSongPress = (song: Song) => {
+    // Implement logic to play the song
+    Alert.alert('Play Song', `Playing: ${song.title} by ${song.artist}`);
+  };
 
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Loading songs for search...</Text>
+        <ActivityIndicator size="large" color={theme.colors.secondary} />
+        <Text style={{ color: theme.colors.text }}>Loading songs for search...</Text>
       </View>
     );
   }
@@ -61,7 +106,7 @@ const SearchScreen: React.FC = () => {
     return (
       <View style={styles.centered}>
         <Text style={styles.errorText}>{error}</Text>
-        <Button title="Retry" onPress={() => {
+        <ThemedButton title="Retry" onPress={() => {
           setLoading(true);
           setError(null);
           // Re-fetch data on retry
@@ -85,83 +130,29 @@ const SearchScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search for songs or artists..."
-        value={searchText}
-        onChangeText={handleSearch}
-      />
+      <View style={styles.trackListHeader}>
+        <Text style={{ ...styles.trackListHeaderItem, width: 30 }}>#</Text>
+        <Text style={{ ...styles.trackListHeaderItem, flex: 3 }}>TITLE</Text>
+        <Text style={{ ...styles.trackListHeaderItem, flex: 2 }}>ARTIST</Text>
+        <Text style={{ ...styles.trackListHeaderItem, flex: 2 }}>ALBUM</Text>
+        <Text style={{ ...styles.trackListHeaderItem, flex: 0.8, textAlign: 'right' }}>TIME</Text>
+        <View style={{ width: 80 }} />{/* Placeholder for action icons */}
+      </View>
       <FlatList
         data={searchResults}
-        renderItem={renderSongItem}
+        renderItem={({ item, index }) => <TrackListItem song={item} index={index} onPress={handleSongPress} />}
         keyExtractor={(item) => item.id.toString()}
         style={styles.resultsList}
         ListEmptyComponent={
-          searchText.length > 0 ? (
+          searchQuery.length > 0 ? (
             <Text style={styles.noResultsText}>No results found.</Text>
           ) : (
-            <Text style={styles.noResultsText}>Start typing to search.</Text>
+            <Text style={styles.noResultsText}>Start typing in the search bar above.</Text>
           )
         }
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f0f0f0',
-    padding: 20,
-  },
-  searchInput: {
-    height: 50,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    marginBottom: 20,
-    backgroundColor: '#fff',
-  },
-  resultsList: {
-    flexGrow: 1,
-    width: '100%',
-  },
-  songItem: {
-    backgroundColor: '#fff',
-    padding: 15,
-    borderRadius: 8,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-  },
-  songTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  songArtist: {
-    fontSize: 14,
-    color: 'gray',
-  },
-  noResultsText: {
-    textAlign: 'center',
-    marginTop: 50,
-    fontSize: 16,
-    color: 'gray',
-  },
-  centered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 18,
-    marginBottom: 20,
-  },
-});
 
 export default SearchScreen;

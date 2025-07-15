@@ -1,14 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, Alert, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Alert, useWindowDimensions } from 'react-native';
 import { login } from '../services/api';
+import { useTheme } from '../context/ThemeContext';
+import ThemedButton from '../components/ThemedButton';
 
 interface AuthScreenProps {
   navigation: any; // You might want to use a more specific type from @react-navigation/native
 }
 
-const { width } = Dimensions.get('window');
+  const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
+  const { width } = useWindowDimensions();
+  const { theme } = useTheme();
 
-const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.colors.background,
+      padding: 20,
+    },
+    title: {
+      fontSize: 32,
+      fontWeight: 'bold',
+      marginBottom: 40,
+      color: theme.colors.primary,
+    },
+    inputContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      width: width > 768 ? 400 : '70%', // Max width 400px on large screens, 70% on small
+      borderColor: theme.colors.border,
+      borderWidth: 1,
+      borderRadius: 8,
+      marginBottom: 20,
+      backgroundColor: theme.colors.background,
+      paddingHorizontal: 10,
+    },
+    icon: {
+      fontSize: 20,
+      marginRight: 10,
+      color: theme.colors.text,
+    },
+    input: {
+      flex: 1, // Take remaining space
+      height: 50,
+      color: theme.colors.primary,
+    },
+    buttonContainer: {
+      width: width > 768 ? 200 : '50%', // Max width 200px on large screens, 50% on small
+      marginTop: 10,
+    },
+    });
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -56,49 +99,13 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <Button title="Login" onPress={handleLogin} />
+        <ThemedButton title="Login" onPress={handleLogin} />
       </View>
       {/* Add more UI elements for signup, forgot password, etc. */}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-    padding: 20,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 40,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: width * 0.7, // 70% of screen width
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 20,
-    backgroundColor: '#fff',
-    paddingHorizontal: 10,
-  },
-  icon: {
-    fontSize: 20,
-    marginRight: 10,
-  },
-  input: {
-    flex: 1, // Take remaining space
-    height: 50,
-  },
-  buttonContainer: {
-    width: width * 0.5, // 50% of screen width
-    marginTop: 10,
-  },
-});
+
 
 export default AuthScreen;

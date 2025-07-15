@@ -1,10 +1,9 @@
-import { AppRegistry, Platform } from 'react-native';
-import App from './App';
+import { AppRegistry } from 'react-native';
+import App from './App.tsx';
+import './src/styles/global.css';
 
 AppRegistry.registerComponent('frontend', () => App);
 
-if (Platform.OS === 'web') {
-  AppRegistry.runApplication('frontend', {
-    rootTag: document.getElementById('root'),
-  });
-}
+AppRegistry.runApplication('frontend', {
+  rootTag: document.getElementById('root'),
+});
