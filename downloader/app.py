@@ -4,12 +4,12 @@ import os
 
 app = Flask(__name__)
 
-@app.route('/health')
+@app.route('/health', endpoint='health_check')
 def health_check():
     return jsonify({'status': 'UP'}), 200
 
-@app.route('/readiness')
-def health_check():
+@app.route('/readiness', endpoint='readiness_probe')
+def readiness_check_function():
     return jsonify({'status': 'UP'}), 200
 
 @app.route('/download', methods=['POST'])
