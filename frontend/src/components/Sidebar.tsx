@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
-import { MdAccountCircle, MdHome, MdSearch, MdRadio, MdPlaylistPlay, MdAlbum, MdMusicNote, MdVideoLibrary, MdPeople, MdAddCircle, MdSettings, MdOutlineQueueMusic } from 'react-icons/md';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -127,7 +127,7 @@ const Sidebar: React.FC<SidebarProps> = ({ navigation, route }) => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.profileSection}>
-        <MdAccountCircle style={styles.profileIcon} />
+        <Icon name="account-circle" style={styles.profileIcon} />
         <Text style={styles.profileName}>Joe</Text>
       </View>
 
@@ -135,7 +135,7 @@ const Sidebar: React.FC<SidebarProps> = ({ navigation, route }) => {
         style={{ ...styles.navItem, ...(currentRouteName === 'Home' && styles.activeNavItem) }}
         onPress={() => navigateTo('Home')}
       >
-        <MdHome style={{ ...styles.navIcon, ...(currentRouteName === 'Home' && styles.activeNavText) }} />
+        <Icon name="home" style={{ ...styles.navIcon, ...(currentRouteName === 'Home' && styles.activeNavText) }} />
         <Text style={{ ...styles.navText, ...(currentRouteName === 'Home' && styles.activeNavText) }}>Home</Text>
       </TouchableOpacity>
 
@@ -143,7 +143,7 @@ const Sidebar: React.FC<SidebarProps> = ({ navigation, route }) => {
         style={{ ...styles.navItem, ...(currentRouteName === 'Search' && styles.activeNavItem) }}
         onPress={() => navigateTo('Search')}
       >
-        <MdSearch style={{ ...styles.navIcon, ...(currentRouteName === 'Search' && styles.activeNavText) }} />
+        <Icon name="magnify" style={{ ...styles.navIcon, ...(currentRouteName === 'Search' && styles.activeNavText) }} />
         <Text style={{ ...styles.navText, ...(currentRouteName === 'Search' && styles.activeNavText) }}>Search</Text>
       </TouchableOpacity>
 
@@ -151,42 +151,42 @@ const Sidebar: React.FC<SidebarProps> = ({ navigation, route }) => {
         style={{ ...styles.navItem, ...(currentRouteName === 'MusicPlayerExpanded' && styles.activeNavItem) }}
         onPress={() => navigateTo('MusicPlayerExpanded')}
       >
-        <MdOutlineQueueMusic style={{ ...styles.navIcon, ...(currentRouteName === 'MusicPlayerExpanded' && styles.activeNavText) }} />
+        <Icon name="playlist-play" style={{ ...styles.navIcon, ...(currentRouteName === 'MusicPlayerExpanded' && styles.activeNavText) }} />
         <Text style={{ ...styles.navText, ...(currentRouteName === 'MusicPlayerExpanded' && styles.activeNavText) }}>Now Playing</Text>
       </TouchableOpacity>
 
       <Text style={styles.sectionTitle}>MY COLLECTION</Text>
       <TouchableOpacity style={styles.navItem} onPress={() => { /* navigate to Mixes & Radio */ }}>
-        <MdRadio style={styles.navIcon} />
+        <Icon name="radio" style={styles.navIcon} />
         <Text style={styles.navText}>Mixes & Radio</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={{ ...styles.navItem, ...(currentRouteName === 'Playlist' && styles.activeNavItem) }}
         onPress={() => navigateTo('Playlist')}
       >
-        <MdPlaylistPlay style={{ ...styles.navIcon, ...(currentRouteName === 'Playlist' && styles.activeNavText) }} />
+        <Icon name="playlist-music" style={{ ...styles.navIcon, ...(currentRouteName === 'Playlist' && styles.activeNavText) }} />
         <Text style={{ ...styles.navText, ...(currentRouteName === 'Playlist' && styles.activeNavText) }}>Playlists</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.navItem} onPress={() => { /* navigate to Albums */ }}>
-        <MdAlbum style={styles.navIcon} />
+        <Icon name="album" style={styles.navIcon} />
         <Text style={styles.navText}>Albums</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.navItem} onPress={() => { /* navigate to Tracks */ }}>
-        <MdMusicNote style={styles.navIcon} />
+        <Icon name="music-note" style={styles.navIcon} />
         <Text style={styles.navText}>Tracks</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.navItem} onPress={() => { /* navigate to Videos */ }}>
-        <MdVideoLibrary style={styles.navIcon} />
+        <Icon name="video" style={styles.navIcon} />
         <Text style={styles.navText}>Videos</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.navItem} onPress={() => { /* navigate to Artists */ }}>
-        <MdPeople style={styles.navIcon} />
+        <Icon name="account-group" style={styles.navIcon} />
         <Text style={styles.navText}>Artists</Text>
       </TouchableOpacity>
 
       <Text style={styles.sectionTitle}>PLAYLISTS</Text>
       <TouchableOpacity style={styles.createPlaylistButton} onPress={() => { /* create new playlist */ }}>
-        <MdAddCircle style={styles.createPlaylistIcon} />
+        <Icon name="plus-circle" style={styles.createPlaylistIcon} />
         <Text style={styles.createPlaylistText}>Create...</Text>
       </TouchableOpacity>
       {playlists.map((playlist) => (
@@ -199,7 +199,7 @@ const Sidebar: React.FC<SidebarProps> = ({ navigation, route }) => {
         style={{ ...styles.navItem, ...(currentRouteName === 'Settings' && styles.activeNavItem) }}
         onPress={() => navigateTo('Settings')}
       >
-        <MdSettings style={{ ...styles.navIcon, ...(currentRouteName === 'Settings' && styles.activeNavText) }} />
+        <Icon name="cog" style={{ ...styles.navIcon, ...(currentRouteName === 'Settings' && styles.activeNavText) }} />
         <Text style={{ ...styles.navText, ...(currentRouteName === 'Settings' && styles.activeNavText) }}>Settings</Text>
       </TouchableOpacity>
     </ScrollView>

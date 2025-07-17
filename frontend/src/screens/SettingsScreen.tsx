@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Switch, useWindowDimensions } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 import ThemedButton from '../components/ThemedButton';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const SettingsScreen: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
@@ -67,7 +68,10 @@ const SettingsScreen: React.FC = () => {
       <Text style={styles.title}>Settings</Text>
 
       <View style={styles.settingItem}>
-        <Text style={styles.settingLabel}>Dark Mode</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Icon name="moon-o" size={20} color={theme.colors.text} style={{ marginRight: 10 }} />
+          <Text style={styles.settingLabel}>Dark Mode</Text>
+        </View>
         <Switch
           trackColor={{ false: theme.colors.border, true: theme.colors.secondary }}
           thumbColor={theme.colors.primary}
@@ -78,7 +82,10 @@ const SettingsScreen: React.FC = () => {
       </View>
 
       <View style={styles.settingItem}>
-        <Text style={styles.settingLabel}>Language</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Icon name="globe" size={20} color={theme.colors.text} style={{ marginRight: 10 }} />
+          <Text style={styles.settingLabel}>Language</Text>
+        </View>
         <View style={styles.languageOptions}>
           <ThemedButton title="English" onPress={() => handleLanguageChange('English')} />
           <ThemedButton title="Español" onPress={() => handleLanguageChange('Spanish')} />

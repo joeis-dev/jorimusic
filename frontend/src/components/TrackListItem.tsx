@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useTheme } from "../context/ThemeContext";
-import { MdOutlineQueueMusic } from "react-icons/md"; // Changed import
+import Icon from "react-native-vector-icons/MaterialCommunityIcons"; // Changed import
 
 const TrackListItem = ({ song, index, onPress }) => {
   const { theme } = useTheme();
@@ -42,7 +42,7 @@ const TrackListItem = ({ song, index, onPress }) => {
           {song.artist}
         </Text>
       </View>
-      <MdOutlineQueueMusic size={24} color={theme.textPrimary} /> {/* Changed component usage */}
+      <Icon name="queue-music" size={24} color={theme.textPrimary} />
     </TouchableOpacity>
   );
 };

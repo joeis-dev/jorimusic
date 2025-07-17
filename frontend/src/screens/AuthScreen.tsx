@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Alert, useWindowDimensions } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { login } from '../services/api';
 import { useTheme } from '../context/ThemeContext';
 import ThemedButton from '../components/ThemedButton';
@@ -77,7 +78,7 @@ interface AuthScreenProps {
       <Text style={styles.title}>JoriMusic</Text>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.icon}>👤</Text>
+        <Icon name="user" size={20} color={theme.colors.text} />
         <TextInput
           style={styles.input}
           placeholder="Username"
@@ -88,7 +89,7 @@ interface AuthScreenProps {
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.icon}>🔒</Text>
+        <Icon name="lock" size={20} color={theme.colors.text} />
         <TextInput
           style={styles.input}
           placeholder="Password"
@@ -99,7 +100,7 @@ interface AuthScreenProps {
       </View>
 
       <View style={styles.buttonContainer}>
-        <ThemedButton title="Login" onPress={handleLogin} />
+        <ThemedButton title="Login" iconName="sign-in" onPress={handleLogin} />
       </View>
       {/* Add more UI elements for signup, forgot password, etc. */}
     </View>
