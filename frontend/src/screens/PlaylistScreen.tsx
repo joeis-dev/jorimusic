@@ -4,6 +4,7 @@ import { getAllPlaylists } from '../services/api';
 import { Playlist } from '../types/models';
 import { useTheme } from '../context/ThemeContext';
 import ThemedButton from '../components/ThemedButton';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const PlaylistScreen: React.FC = () => {
   const { theme } = useTheme();
@@ -91,9 +92,12 @@ const PlaylistScreen: React.FC = () => {
 
   const renderPlaylistItem = ({ item }: { item: Playlist }) => (
     <TouchableOpacity style={styles.playlistItem} activeOpacity={0.7}>
-      <Text style={styles.playlistName}>{item.name}</Text>
-      {/* Assuming songCount is not directly available from backend Playlist model, or needs to be calculated */}
-      <Text style={styles.songCount}>{item.songs ? item.songs.length : 0} songs</Text>
+      <View>
+        <Text style={styles.playlistName}>{item.name}</Text>
+        {/* Assuming songCount is not directly available from backend Playlist model, or needs to be calculated */}
+        <Text style={styles.songCount}>{item.songs ? item.songs.length : 0} songs</Text>
+      </View>
+      <Icon name="chevron-right" size={20} color={theme.colors.text} />
     </TouchableOpacity>
   );
 
@@ -116,7 +120,7 @@ const PlaylistScreen: React.FC = () => {
     return (
       <View style={styles.centered}>
         <Text style={styles.errorText}>{error}</Text>
-        <ThemedButton title="Retry" onPress={() => {
+        <ThemedButton title="Retry" iconName="refresh" onPress={() => {
           setLoading(true);
           setError(null);
           // Re-fetch data on retry
@@ -151,7 +155,7 @@ const PlaylistScreen: React.FC = () => {
       ) : (
         <Text style={styles.noPlaylistsText}>No playlists found. Create one!</Text>
       )}
-      <ThemedButton title="Create New Playlist" onPress={handleCreatePlaylist} />
+      <ThemedButton title="Create New Playlist" iconName="plus" onPress={handleCreatePlaylist} />
     </View>
   );
 };

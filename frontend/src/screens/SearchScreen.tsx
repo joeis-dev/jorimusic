@@ -106,7 +106,7 @@ const SearchScreen: React.FC = () => {
     return (
       <View style={styles.centered}>
         <Text style={styles.errorText}>{error}</Text>
-        <ThemedButton title="Retry" onPress={() => {
+        <ThemedButton title="Retry" iconName="refresh" onPress={() => {
           setLoading(true);
           setError(null);
           // Re-fetch data on retry

@@ -114,7 +114,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     return (
       <View style={styles.centered}>
         <Text style={styles.errorText}>{error}</Text>
-        <ThemedButton title="Retry" onPress={() => {
+        <ThemedButton title="Retry" iconName="refresh" onPress={() => {
           setLoading(true);
           setError(null);
           // Re-fetch data on retry
@@ -156,8 +156,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>All Songs</Text>
         <View style={styles.playShuffleButtons}>
-          <ThemedButton title="Play" onPress={() => { /* Play all songs */ }} />
-          <ThemedButton title="Shuffle" onPress={() => { /* Shuffle all songs */ }} />
+          <ThemedButton title="Play" iconName="play" onPress={() => { /* Play all songs */ }} />
+          <ThemedButton title="Shuffle" iconName="random" onPress={() => { /* Shuffle all songs */ }} />
         </View>
         <View style={styles.trackListHeader}>
           <Text style={{ ...styles.trackListHeaderItem, width: 30 }}>#</Text>
@@ -185,9 +185,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       </View>
 
       <View style={styles.navigationButtons}>
-        <ThemedButton title="Go to Playlists" onPress={() => navigation.navigate('Playlist')} />
-        <ThemedButton title="Go to Search" onPress={() => navigation.navigate('Search')} />
-        <ThemedButton title="Go to Settings" onPress={() => navigation.navigate('Settings')} />
+        <ThemedButton title="Go to Playlists" iconName="list" onPress={() => navigation.navigate('Playlist')} />
+        <ThemedButton title="Go to Search" iconName="search" onPress={() => navigation.navigate('Search')} />
+        <ThemedButton title="Go to Settings" iconName="cog" onPress={() => navigation.navigate('Settings')} />
       </View>
     </ScrollView>
   );

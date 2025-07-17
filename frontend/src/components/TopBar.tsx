@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
-import { MdArrowBack, MdArrowForward, MdSearch, MdNotifications, MdAccountCircle } from 'react-icons/md';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { useSearch } from '../context/SearchContext';
 
@@ -58,15 +58,15 @@ const TopBar: React.FC = () => {
     <View style={styles.container}>
       <View style={styles.leftSection}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconButton}>
-          <MdArrowBack style={styles.icon} />
+          <Icon name="arrow-left" style={styles.icon} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.goForward()} style={styles.iconButton}>
-          <MdArrowForward style={styles.icon} />
+          <Icon name="arrow-right" style={styles.icon} />
         </TouchableOpacity>
       </View>
 
       <View style={styles.searchContainer}>
-        <MdSearch style={styles.icon} />
+        <Icon name="magnify" style={styles.icon} />
         <TextInput
           style={styles.searchInput}
           placeholder="Search"
@@ -77,10 +77,10 @@ const TopBar: React.FC = () => {
 
       <View style={styles.rightSection}>
         <TouchableOpacity style={styles.iconButton}>
-          <MdNotifications style={styles.icon} />
+          <Icon name="bell" style={styles.icon} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconButton}>
-          <MdAccountCircle style={styles.icon} />
+          <Icon name="account-circle" style={styles.icon} />
         </TouchableOpacity>
       </View>
     </View>

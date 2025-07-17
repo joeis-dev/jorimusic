@@ -122,7 +122,8 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ currentSong }) => {
           <Text style={styles.title}>Now Playing:</Text>
           <Text style={styles.songInfo}>{currentSong.title} - {currentSong.artist}</Text>
           <ThemedButton
-            title={playbackState.state === State.Playing ? 'Pause' : 'Play'}
+            title=""
+            iconName={playbackState.state === State.Playing ? 'pause' : 'play'}
             onPress={togglePlayback}
           />
         </View>

@@ -63,3 +63,8 @@ Thumbs.db
 /work-log/
 GEMINI.md
 /ui-mockups/
+*GUIDE.md
+*.sh
+*guide.md
+*.exe
+*.txt

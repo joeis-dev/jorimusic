@@ -146,8 +146,8 @@ const PlaylistDetailScreen: React.FC<PlaylistDetailScreenProps> = ({ route, navi
       <Text style={styles.playlistInfo}>{playlist.songs ? playlist.songs.length : 0} songs</Text>
 
       <View style={styles.playShuffleButtons}>
-        <ThemedButton title="Play" onPress={() => { /* Play all songs in playlist */ }} />
-        <ThemedButton title="Shuffle" onPress={() => { /* Shuffle all songs in playlist */ }} />
+        <ThemedButton title="Play" iconName="play" onPress={() => { /* Play all songs in playlist */ }} />
+        <ThemedButton title="Shuffle" iconName="random" onPress={() => { /* Shuffle all songs in playlist */ }} />
       </View>
 
       <View style={styles.trackListHeader}>
