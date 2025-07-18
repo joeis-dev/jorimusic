@@ -1,45 +1,52 @@
-import React from 'react';
-import { Button, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Import Icon
-import { useTheme } from '../context/ThemeContext';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Platform } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { lightTheme } from '../themes';
 
 interface ThemedButtonProps {
   title: string;
   onPress: () => void;
-  iconName?: string; // New prop for icon name
-  iconSize?: number; // New prop for icon size
-  iconColor?: string; // New prop for icon color
-  // Add other props you might need, e.g., disabled, accessibilityLabel
+  iconName?: string;
+  iconSize?: number;
+  iconColor?: string;
+  style?: object; // Allow passing additional styles
 }
 
-const ThemedButton: React.FC<ThemedButtonProps> = ({ title, onPress, iconName, iconSize, iconColor, ...props }) => {
-  const { theme } = useTheme();
+const ThemedButton: React.FC<ThemedButtonProps> = ({ title, onPress, iconName, iconSize, iconColor, style, ...props }) => {
+  const [isHovered, setIsHovered] = useState(false);
 
-  const styles = StyleSheet.create({
-    buttonContainer: {
-      backgroundColor: theme.colors.primary, // Use theme primary color for button background
+  const buttonStyles = StyleSheet.create({
+    container: {
+      backgroundColor: lightTheme.colors.background,
       borderRadius: 8,
-      overflow: 'hidden', // Ensures content respects border radius
-      flexDirection: 'row', // Arrange icon and text horizontally
-      alignItems: 'center', // Center items vertically
-      justifyContent: 'center', // Center items horizontally
-      paddingVertical: 10, // Consistent vertical padding
-      paddingHorizontal: 15, // Consistent horizontal padding
+      overflow: 'hidden',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 10,
+      paddingHorizontal: 15,
+      opacity: isHovered && Platform.OS === 'web' ? 0.8 : 1, // Apply hover effect only on web
     },
-    buttonText: {
-      color: theme.colors.background, // Use theme background color for text (contrast with primary)
+    text: {
+      color: lightTheme.colors.text,
       textAlign: 'center',
       fontSize: 18,
       fontWeight: 'bold',
-      marginLeft: iconName ? 10 : 0, // Add margin if icon is present
+      marginLeft: iconName ? 10 : 0,
     },
   });
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.buttonContainer} activeOpacity={0.7} {...props}>
-      {iconName && <Icon name={iconName} size={iconSize || 18} color={iconColor || theme.colors.background} />}
-      <Text style={styles.buttonText}>{title}</Text>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[buttonStyles.container, style]} // Apply base styles and then any passed-in styles
+      activeOpacity={0.7}
+      onMouseEnter={Platform.OS === 'web' ? () => setIsHovered(true) : undefined}
+      onMouseLeave={Platform.OS === 'web' ? () => setIsHovered(false) : undefined}
+      {...props}
+    >
+      {iconName && <Icon name={iconName} size={iconSize || 18} color={iconColor || lightTheme.colors.text} />}
+      <Text style={buttonStyles.text}>{title}</Text>
     </TouchableOpacity>
   );
 };
